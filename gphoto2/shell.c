@@ -1,6 +1,6 @@
 /* shell.c:
  *
- * Copyright © 2002 Lutz Müller <lutz@users.sourceforge.net>
+ * Copyright ï¿½ 2002 Lutz Mï¿½ller <lutz@users.sourceforge.net>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -106,6 +106,7 @@ static int shell_rmdir         (Camera *, const char *);
 static int shell_wait_event    (Camera *, const char *);
 static int shell_summary       (Camera *, const char *);
 static int shell_storage_info  (Camera *, const char *);
+static int shell_reset       (Camera *, const char *);
 
 #define MAX_FOLDER_LEN 1024
 #define MAX_FILE_LEN 1024
@@ -161,6 +162,7 @@ static const struct _ShellFunctionTable {
 	{"wait-event", shell_wait_event, N_("Wait for an event"), N_("count or seconds"), 0},
 	{"capture-tethered", shell_capture_tethered, N_("Wait for images to be captured and download it"), N_("count or seconds"), 0},
 	{"wait-event-and-download", shell_capture_tethered, N_("Wait for events and images to be captured and download it"), N_("count or seconds"), 0},
+	{"reset", shell_reset, N_("Reset camera and don't exit shell"), NULL, 0},
 	{"q", shell_exit, N_("Exit the gPhoto shell"), NULL, 0},
 	{"quit", shell_exit, N_("Exit the gPhoto shell"), NULL, 0},
 	{"?", shell_help, N_("Displays command usage"), N_("[command]"), 0},
@@ -1021,6 +1023,12 @@ shell_help (Camera __unused__ *camera, const char *arg)
 	printf ("\n\n");
 
 	return (GP_OK);
+}
+
+static int
+shell_reset (Camera __unused__ *camera, const char __unused__ *args) {
+	CHECK (action_camera_reset (p));
+	return GP_OK;
 }
 
 

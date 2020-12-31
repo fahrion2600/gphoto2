@@ -190,7 +190,7 @@ list_folders_action (GPParams *p)
 	int count;
 	const char *name;
 	int i;
-	
+
 	CR (gp_list_new (&list));
 
 	CL (gp_camera_folder_list_folders (p->camera, p->folder, list,
@@ -198,7 +198,7 @@ list_folders_action (GPParams *p)
 	CL (count = gp_list_count (list), list);
 	if (!(p->flags & FLAGS_QUIET))
 		printf(ngettext(
-			"There is %d folder in folder '%s'.\n", 
+			"There is %d folder in folder '%s'.\n",
 			"There are %d folders in folder '%s'.\n",
 			count
 		), count, p->folder);
@@ -345,7 +345,7 @@ print_file_action (GPParams *p, const char *folder, const char *filename)
 
 	if (p->flags & FLAGS_NEW) {
 		CameraFileInfo info;
-		
+
 		CR (gp_camera_file_get_info (p->camera, folder,
 					     filename, &info, p->context));
 		if (info.file.fields & GP_FILE_INFO_STATUS &&
@@ -441,7 +441,7 @@ delete_file_action (GPParams *p, const char *folder, const char *filename)
 {
 	if (p->flags & FLAGS_NEW) {
 		CameraFileInfo info;
-		
+
 		CR (gp_camera_file_get_info (p->camera, folder, filename,
 					     &info, p->context));
 		if (info.file.fields & GP_FILE_INFO_STATUS &&
@@ -484,7 +484,7 @@ print_hline (void)
         printf ("+");
         for (i = 0; i < 59; i++)
                 putchar ('-');
-        putchar ('\n'); 
+        putchar ('\n');
 }
 #endif
 
@@ -727,7 +727,7 @@ action_camera_show_abilities (GPParams *p)
         	(a.folder_operations & GP_FOLDER_OPERATION_DELETE_ALL) ?
                 					_("yes"):_("no"));
 	printf (_("File preview (thumbnail) support : %s\n"),
-		(a.file_operations & GP_FILE_OPERATION_PREVIEW) ? 
+		(a.file_operations & GP_FILE_OPERATION_PREVIEW) ?
 							_("yes"):_("no"));
 	printf (_("File upload support              : %s\n"),
 		(a.folder_operations & GP_FOLDER_OPERATION_PUT_FILE) ?
@@ -812,7 +812,7 @@ action_camera_about (GPParams *params)
 	CameraText text;
 
 	CR (gp_camera_get_about (params->camera, &text, params->context));
-	
+
 	printf (_("About the camera driver:"));
 	printf ("\n%s\n", _(text.text));
 
@@ -954,7 +954,7 @@ _action_camera_capture_preview (GPParams *p, int viewasciiart)
 	CameraFile *file;
 	int	r, fd;
 	char tmpname[20], *tmpfilename = NULL;
-	
+
 	if (p->flags & FLAGS_STDOUT) {
 		fd = dup(fileno(stdout));
 		CR (gp_file_new_from_fd (&file, fd));
@@ -1024,7 +1024,7 @@ action_camera_capture_movie (GPParams *p, const char *arg)
 	int		frames,captured_frames=0;
 	char		*xname;
 	struct timeval	starttime;
-	
+
 	if (p->flags & FLAGS_STDOUT) {
 		fd = dup(fileno(stdout));
 		xname = "stdout";
@@ -1095,7 +1095,7 @@ action_camera_capture_movie (GPParams *p, const char *arg)
 }
 
 
-/* 
+/*
  * arg can be:
  * events as number			e.g.: 1000
  * frames as number with suffix f 	e.g.: 100f
@@ -1125,17 +1125,17 @@ action_camera_wait_event (GPParams *p, enum download_type downloadtype, const ch
 		printf ( _("Waiting for events from camera. Press Ctrl-C to abort.\n"));
 	} else {
 		int x;
-		if ((arg[strlen(arg)-1]=='f') && sscanf(arg,"%df", &x)) { /* exact nr of frames */ 
+		if ((arg[strlen(arg)-1]=='f') && sscanf(arg,"%df", &x)) { /* exact nr of frames */
 			wp.type			= WAIT_FRAMES;
 			wp.u.frames		= x;
 			printf ( _("Waiting for %d frames from the camera. Press Ctrl-C to abort.\n"), x);
 		} else
-		if ((strlen(arg)>2) && (!strcmp(&arg[strlen(arg)-2],"ms")) && sscanf(arg,"%dms",&x)) { /* exact milliseconds */ 
+		if ((strlen(arg)>2) && (!strcmp(&arg[strlen(arg)-2],"ms")) && sscanf(arg,"%dms",&x)) { /* exact milliseconds */
 			wp.type			= WAIT_TIME;
 			wp.u.milliseconds	= x;
 			printf ( _("Waiting for %d milliseconds for events from camera. Press Ctrl-C to abort.\n"), x);
 		} else
-		if ((wp.type != WAIT_TIME) && (arg[strlen(arg)-1]=='s') && sscanf(arg,"%ds", &x)) { /* exact seconds */ 
+		if ((wp.type != WAIT_TIME) && (arg[strlen(arg)-1]=='s') && sscanf(arg,"%ds", &x)) { /* exact seconds */
 			wp.type			= WAIT_TIME;
 			wp.u.milliseconds	= x*1000;
 			printf ( _("Waiting for %d seconds for events from camera. Press Ctrl-C to abort.\n"), x);
@@ -1224,7 +1224,7 @@ action_camera_wait_event (GPParams *p, enum download_type downloadtype, const ch
 
 			if (	(downloadtype == DT_NO_DOWNLOAD)	||
 				(	(p->flags & FLAGS_KEEP_RAW) &&
-				 	( !strstr(fn->name,".jpg") && !strstr(fn->name,".JPG")) 
+				 	( !strstr(fn->name,".jpg") && !strstr(fn->name,".JPG"))
 				)
 			) {
 				printf("FILEADDED %s %s\n",fn->name, fn->folder);
@@ -1505,13 +1505,13 @@ debug_action (GPParams *p, const char *debug_loglevel, const char *debug_logfile
 		if (camlibs) {
 			gp_log (GP_LOG_DEBUG, "main", "CAMLIBS = '%s'", camlibs);
 		} else {
-			gp_log (GP_LOG_DEBUG, "main", 
+			gp_log (GP_LOG_DEBUG, "main",
 				"CAMLIBS env var not set, using compile-time default instead");
 		}
 		if (iolibs) {
 			gp_log (GP_LOG_DEBUG, "main", "IOLIBS = '%s'", iolibs);
 		} else {
-			gp_log (GP_LOG_DEBUG, "main", 
+			gp_log (GP_LOG_DEBUG, "main",
 				"IOLIBS env var not set, using compile-time default instead");
 		}
 	}
@@ -1550,7 +1550,7 @@ display_widgets (GPParams *p, CameraWidget *widget, char *prefix, int dumpval) {
 	}
 	for (i=0; i<n; i++) {
 		CameraWidget *child;
-	
+
 		ret = gp_widget_get_child (widget, i, &child);
 		if (ret != GP_OK)
 			continue;
@@ -1597,7 +1597,7 @@ _find_widget_by_name (GPParams *p, const char *name, CameraWidget **child, Camer
 	ret = gp_camera_get_config (p->camera, rootconfig, p->context);
 	if (ret != GP_OK) return ret;
 	ret = gp_widget_get_child_by_name (*rootconfig, name, child);
-	if (ret != GP_OK) 
+	if (ret != GP_OK)
 		ret = gp_widget_get_child_by_label (*rootconfig, name, child);
 	if (ret != GP_OK) {
 		char		*part, *s, *newname;
@@ -1667,7 +1667,7 @@ print_widget (GPParams *p, const char *name, CameraWidget *widget) {
 	ret = gp_widget_get_label (widget, &label);
 	if (ret != GP_OK)
 		return ret;
-		
+
 	ret = gp_widget_get_readonly (widget, &readonly);
 	if (ret != GP_OK)
 		return ret;
@@ -1766,7 +1766,7 @@ print_widget (GPParams *p, const char *name, CameraWidget *widget) {
 	case GP_WIDGET_BUTTON:
 		break;
 	}
-	
+
 	printf ("END\n");
 	return GP_OK;
 }
@@ -1923,7 +1923,7 @@ set_config_action (GPParams *p, const char *name, const char *value) {
 		if (i != cnt)
 			break;
 
-		/* make sure we parse just 1 integer, and there is nothing more. 
+		/* make sure we parse just 1 integer, and there is nothing more.
 		 * sscanf just does not provide this, we need strtol.
 		 */
 		i = strtol (value, &endptr, 10);
@@ -2017,7 +2017,7 @@ set_config_index_action (GPParams *p, const char *name, const char *value) {
 	case GP_WIDGET_TOGGLE:
 	case GP_WIDGET_TEXT:
 	case GP_WIDGET_RANGE:
-	case GP_WIDGET_DATE: 
+	case GP_WIDGET_DATE:
 	case GP_WIDGET_WINDOW:
 	case GP_WIDGET_SECTION:
 	case GP_WIDGET_BUTTON:
@@ -2180,6 +2180,13 @@ set_config_value_action (GPParams *p, const char *name, const char *value) {
 	}
 	gp_widget_free (rootconfig);
 	return (ret);
+}
+
+int
+action_camera_reset (GPParams *params)
+{
+	CR (gp_camera_reset (params->camera, params->context));
+	return (GP_OK);
 }
 
 
