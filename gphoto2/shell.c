@@ -106,7 +106,7 @@ static int shell_rmdir         (Camera *, const char *);
 static int shell_wait_event    (Camera *, const char *);
 static int shell_summary       (Camera *, const char *);
 static int shell_storage_info  (Camera *, const char *);
-static int shell_reset       (Camera *, const char *);
+static int shell_change_mode   (Camera *, const char *);
 
 #define MAX_FOLDER_LEN 1024
 #define MAX_FILE_LEN 1024
@@ -162,7 +162,8 @@ static const struct _ShellFunctionTable {
 	{"wait-event", shell_wait_event, N_("Wait for an event"), N_("count or seconds"), 0},
 	{"capture-tethered", shell_capture_tethered, N_("Wait for images to be captured and download it"), N_("count or seconds"), 0},
 	{"wait-event-and-download", shell_capture_tethered, N_("Wait for events and images to be captured and download it"), N_("count or seconds"), 0},
-	{"reset", shell_reset, N_("Reset camera and don't exit shell"), NULL, 0},
+	{"change-mode", shell_change_mode, N_("Set or toggle camera control mode"),
+	 N_("[camera|host]"), 0},
 	{"q", shell_exit, N_("Exit the gPhoto shell"), NULL, 0},
 	{"quit", shell_exit, N_("Exit the gPhoto shell"), NULL, 0},
 	{"?", shell_help, N_("Displays command usage"), N_("[command]"), 0},
@@ -1026,8 +1027,25 @@ shell_help (Camera __unused__ *camera, const char *arg)
 }
 
 static int
-shell_reset (Camera __unused__ *camera, const char __unused__ *args) {
-	CHECK (action_camera_reset (p));
+shell_change_mode (Camera __unused__ *camera, const char *arg) {
+	int arg_count = shell_arg_count (arg);
+	char arg_mode[1024];
+
+	if (arg_count > 0) {
+		shell_arg (arg, 0, arg_mode);
+
+		if (!strcmp (arg_mode, "camera")) {
+			CHECK (action_camera_change_mode (p, GP_CONTROL_MODE_CAMERA));
+		} else if (!strcmp (arg_mode, "host")) {
+			CHECK (action_camera_change_mode (p, GP_CONTROL_MODE_HOST));
+		} else {
+			printf (_("Expected control modes: camera, host\n"));
+			return GP_ERROR_BAD_PARAMETERS;
+		}
+	} else {
+		CHECK (action_camera_change_mode (p, GP_CONTROL_MODE_TOGGLE));
+	}
+
 	return GP_OK;
 }
 

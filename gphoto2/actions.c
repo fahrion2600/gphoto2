@@ -2183,9 +2183,9 @@ set_config_value_action (GPParams *p, const char *name, const char *value) {
 }
 
 int
-action_camera_reset (GPParams *params)
+action_camera_change_mode (GPParams *params, CameraControlModeType mode)
 {
-	CR (gp_camera_reset (params->camera, params->context));
+	CR (gp_camera_change_mode (params->camera, mode, params->context));
 	return (GP_OK);
 }
 

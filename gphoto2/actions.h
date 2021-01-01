@@ -81,7 +81,7 @@ int action_camera_capture_preview (GPParams *);
 int action_camera_show_preview    (GPParams *);
 int action_camera_capture_movie   (GPParams *, const char *arg);
 int action_camera_wait_event      (GPParams *, enum download_type dt, const char*args);
-int action_camera_reset           (GPParams *);
+int action_camera_change_mode     (GPParams *, CameraControlModeType mode);
 
 /* Other actions */
 int list_cameras_action    (GPParams *);
