@@ -1,0 +1,46 @@
+#!/bin/bash
+
+set -e
+set -x
+
+GPHOTO2_DIR=/workspace/gphoto2
+LIBGPHOTO2_DIR=/workspace/libgphoto2
+APP_DIR=/workspace/appdir
+
+mkdir -p $APP_DIR
+rm -rf ${APP_DIR}/*
+
+# Build libgphoto2
+cd $LIBGPHOTO2_DIR
+make clean || echo "Make clean in $LIBGPHOTO2_DIR failed. This is okay if this is a fresh workspace."
+autoreconf --install --symlink
+./configure --prefix=/usr/
+make -j6
+
+# Install twice, once to get the library where gphoto2 will pick it up, and again for the appimage directory
+make install
+make DESTDIR=${APP_DIR}/ install
+
+# Build gphoto2
+cd $GPHOTO2_DIR
+make clean || echo "Make clean in $GPHOTO_DIR failed. This is okay if this is a fresh workspace."
+autoreconf --install --symlink
+PKG_CONFIG_PATH=/usr/lib/pkgconfig ./configure --prefix=/usr/
+make -j6
+make DESTDIR=${APP_DIR}/ install
+
+# Symlink version directories to camlibs and iolibs
+# These symlinks are used by the AppRun script
+camlib_version=`sed -n 's/^#define VERSION "\(.*\)"$/\1/p' ${LIBGPHOTO2_DIR}/config.h`
+ln -s ${camlib_version} ${APP_DIR}/usr/lib/libgphoto2/camlibs
+iolib_version=`sed -n 's/^#define VERSION "\(.*\)"$/\1/p' ${LIBGPHOTO2_DIR}/libgphoto2_port/config.h`
+ln -s ${iolib_version} ${APP_DIR}/usr/lib/libgphoto2_port/iolibs
+
+# List files in APP_DIR for troubleshooting
+find $APP_DIR
+
+# Make appimage
+cd $GPHOTO2_DIR/appimage
+cp AppRun ${APP_DIR}/AppRun
+/workspace/linuxdeploy-x86_64.AppImage --appimage-extract-and-run --appdir $APP_DIR -d gphoto2.desktop -i gphoto2.png --output appimage
+
